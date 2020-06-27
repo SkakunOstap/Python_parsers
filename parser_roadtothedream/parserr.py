@@ -7,13 +7,6 @@ def domain() -> str:
     return "roadtothedream.com"
 
 
-'''def is_name_in_list(name: str, data: list) -> bool or list:
-    for i, j in enumerate(data):
-        if name in j.keys():
-            return [True, i]
-    return False'''
-
-
 def parse_product_description(data_html: str) -> str:
     soup = BeautifulSoup(data_html, 'lxml')
     description_div = soup.find('div', {'class': 'information__block__description___Information___KWE9m'})
