@@ -20,4 +20,3 @@ if __name__ == '__main__':
         j = i.copy()
         j['description'] = parserr.parse_product_description(send_request(j['url']))
         print(j)
-        break
