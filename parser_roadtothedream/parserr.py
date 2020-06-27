@@ -2,11 +2,23 @@ from bs4 import BeautifulSoup
 from typing import Iterable
 
 
-def is_name_in_list(name: str, data: list) -> bool or list:
+def domain() -> str:
+    """Return domain of site"""
+    return "roadtothedream.com"
+
+
+'''def is_name_in_list(name: str, data: list) -> bool or list:
     for i, j in enumerate(data):
         if name in j.keys():
             return [True, i]
-    return False
+    return False'''
+
+
+def parse_product_description(data_html: str) -> str:
+    soup = BeautifulSoup(data_html, 'lxml')
+    description_div = soup.find('div', {'class': 'information__block__description___Information___KWE9m'})
+    description = description_div.find('p').text
+    return description
 
 
 def parse_preview_data(data_html: str) -> Iterable[dict]:
@@ -16,11 +28,12 @@ def parse_preview_data(data_html: str) -> Iterable[dict]:
     data = {
         'name': None,
         'color': None,
+        'url': None,
+        'description': None,
         'price': None,
         'status': None,
         # 'sizes': [{'size': 'size', 'status': 'enable/disable'}] if product isn't sold out
     }
-    products = []
 
     for i in product_divs:
         product_data = data.copy()
@@ -28,6 +41,8 @@ def parse_preview_data(data_html: str) -> Iterable[dict]:
         product_data['name'] = name.text
         color = i.find('em', {'class': 'em___Description___tJzVm'})
         product_data['color'] = color.text
+        url_tail = i.find('a').get('href')
+        product_data['url'] = "https://" + domain() + url_tail
         price = i.find('div', {'class': 'price___Price___2jC3y'})
         product_data['price'] = price.text
         status = i.find('div', {'class': 'resaled___Sizes___kiNpI'})
@@ -45,6 +60,4 @@ def parse_preview_data(data_html: str) -> Iterable[dict]:
             product_data['sizes'] = sizes
         else:
             product_data['status'] = 'Распродано'
-        products.append(product_data)
-    for i in products:
-        yield i
+        yield product_data

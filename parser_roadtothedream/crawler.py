@@ -5,7 +5,7 @@ import parserr
 
 def domain() -> str:
     """Return domain of site"""
-    return "roadtothedream.com/mens"
+    return "roadtothedream.com"
 
 
 def send_request(url: str) -> str:
@@ -15,6 +15,9 @@ def send_request(url: str) -> str:
 
 
 if __name__ == '__main__':
-    data = parserr.parse_preview_data(send_request('https://' + domain()))
+    data = parserr.parse_preview_data(send_request('https://' + domain() + "/mens"))
     for i in data:
-        print(i)
+        j = i.copy()
+        j['description'] = parserr.parse_product_description(send_request(j['url']))
+        print(j)
+        break
